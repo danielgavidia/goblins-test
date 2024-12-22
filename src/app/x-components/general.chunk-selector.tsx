@@ -53,8 +53,8 @@ const ChunkSelector = ({
     const currentY = e.clientY - rect.top;
 
     const newSelection = {
-      x: Math.min(currentX, startPos.x),
-      y: Math.min(currentY, startPos.y),
+      x: currentX < startPos.x ? currentX : startPos.x,
+      y: currentY < startPos.y ? currentY : startPos.y,
       width: Math.abs(currentX - startPos.x),
       height: Math.abs(currentY - startPos.y),
     };
