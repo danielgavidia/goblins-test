@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-interface SelectionArea {
+export interface SelectionArea {
   x: number;
   y: number;
   width: number;
@@ -11,17 +11,28 @@ interface ChunkSelectorProps {
   imageSrc: string;
   imageAlt?: string;
   onSelectionChange: (selection: SelectionArea) => void;
+  selection?: SelectionArea | null;
+  isSelecting: boolean;
+  setIsSelecting: (value: boolean) => void;
 }
 
 const ChunkSelector = ({
   imageSrc,
   imageAlt = "Selectable image",
   onSelectionChange,
+  selection: externalSelection,
+  isSelecting,
+  setIsSelecting,
 }: ChunkSelectorProps) => {
   const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  const [isSelecting, setIsSelecting] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (externalSelection === null) {
+      setSelection({ x: 0, y: 0, width: 0, height: 0 });
+    }
+  }, [externalSelection]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
@@ -69,7 +80,7 @@ const ChunkSelector = ({
       >
         <img src={imageSrc} alt={imageAlt} className="w-full h-auto" />
 
-        {(isSelecting || selection.width > 0) && (
+        {(isSelecting || (selection.width > 0 && externalSelection !== null)) && (
           <div
             className="absolute border-2 border-blue-500 bg-blue-200 bg-opacity-30"
             style={{
@@ -81,16 +92,6 @@ const ChunkSelector = ({
           />
         )}
       </div>
-
-      {selection.width > 0 && (
-        <div className="mt-4 p-4 bg-gray-100 rounded">
-          <p className="font-medium">Selection Coordinates:</p>
-          <p>X: {Math.round(selection.x)}</p>
-          <p>Y: {Math.round(selection.y)}</p>
-          <p>Width: {Math.round(selection.width)}</p>
-          <p>Height: {Math.round(selection.height)}</p>
-        </div>
-      )}
     </div>
   );
 };
