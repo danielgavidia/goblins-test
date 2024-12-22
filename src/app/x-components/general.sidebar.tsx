@@ -21,8 +21,8 @@ const GeneralSidebar = () => {
       <SidebarHeader className="flex items-start p-4 bg-white">
         <Link href={"/"}>
           <img
-            src="https://www.esai.ai/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.4b6d8299.png&w=1080&q=75"
-            alt="ESAI"
+            src="https://framerusercontent.com/images/rnW1Q2GsGTt3hyXFkTM7ooGFa2w.png?scale-down-to=512"
+            alt="Goblins"
             className="h-14"
           />
         </Link>
@@ -34,19 +34,7 @@ const GeneralSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent className="space-y-1">
             <SidebarMenuButton onClick={() => router.push("/")} className="font-semibold text-xs">
-              All ESAI Tools
-            </SidebarMenuButton>
-            <SidebarMenuButton
-              onClick={() => router.push("/history")}
-              className="font-semibold text-xs"
-            >
-              History
-            </SidebarMenuButton>
-            <SidebarMenuButton
-              onClick={() => router.push("/cards")}
-              className="font-semibold text-xs"
-            >
-              Cards
+              Home
             </SidebarMenuButton>
           </SidebarGroupContent>
         </SidebarGroup>
