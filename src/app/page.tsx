@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useChunks } from "@/hooks/hooks.chunks";
 import { Chunk } from "@/types/types.chunks";
 import { v4 as uuidv4 } from "uuid";
+import { exportToCsv } from "@/utils/utils.export-csv";
 
 const Page = () => {
   const { currentImageIndex, setCurrentImageIndex, currentImage } = useImages();
@@ -39,6 +40,13 @@ const Page = () => {
   return (
     <div className="flex flex-col items-center h-screen p-4">
       <p className="text-2xl font-bold">Goblins Whiteboard Labeling Systems</p>
+
+      {/* CSV export */}
+      <button
+        onClick={() => exportToCsv(chunks, `-goblins-image-chunks-${new Date().toISOString()}.csv`)}
+      >
+        Export Image Chunks to CSV
+      </button>
 
       {/* Image navigation */}
       <div className="flex flex-row gap-2">
