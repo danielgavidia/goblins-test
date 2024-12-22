@@ -10,7 +10,14 @@ import { v4 as uuidv4 } from "uuid";
 const Page = () => {
   const { currentImageIndex, setCurrentImageIndex, currentImage } = useImages();
   const [parentSelection, setParentSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [confidence, setConfidence] = useState(2);
   const { chunks, setChunks } = useChunks();
+
+  const confidenceMapping = {
+    1: "Low",
+    2: "Medium",
+    3: "High",
+  };
 
   const handleSubmitChunk = () => {
     if (currentImage) {
@@ -20,16 +27,24 @@ const Page = () => {
         y: parentSelection.y,
         width: parentSelection.width,
         height: parentSelection.height,
+        confidence: confidence,
         parentImageId: currentImage?.id,
       };
       setChunks([...chunks, newChunk]);
       setParentSelection({ x: 0, y: 0, width: 0, height: 0 });
+      setConfidence(2);
     }
   };
 
   return (
     <div className="flex flex-col items-center h-screen p-4">
       <p className="text-2xl font-bold">Goblins Whiteboard Labeling Systems</p>
+
+      {/* Image navigation */}
+      <div className="flex flex-row gap-2">
+        <button onClick={() => setCurrentImageIndex(currentImageIndex + 1)}>Next</button>
+        <button onClick={() => setCurrentImageIndex(currentImageIndex - 1)}>Previous</button>
+      </div>
 
       {/* Chunk selector */}
       <div>
@@ -41,7 +56,18 @@ const Page = () => {
           />
         )}
       </div>
-      <button onClick={() => setCurrentImageIndex(currentImageIndex + 1)}>Next</button>
+
+      {/* Confidence interval */}
+      <input
+        type="range"
+        min={1}
+        max={3}
+        value={confidence}
+        onChange={(e) => setConfidence(Number(e.target.value))}
+      />
+      <p>
+        Confidence: {confidence} - {confidenceMapping[confidence as keyof typeof confidenceMapping]}
+      </p>
 
       {/* Submit chunk */}
       <button onClick={handleSubmitChunk} className="bg-black text-white p-2 rounded">
