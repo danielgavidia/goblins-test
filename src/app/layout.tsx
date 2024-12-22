@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import GeneralLayout from "./x-layouts/general.layout";
+import { AuthProvider } from "./x-components/general.auth-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,9 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning className={`antialiased`}>
-        <GeneralLayout>{children}</GeneralLayout>
-      </body>
+      <AuthProvider>
+        <body suppressHydrationWarning className={`antialiased`}>
+          <GeneralLayout>{children}</GeneralLayout>
+        </body>
+      </AuthProvider>
     </html>
   );
 }
