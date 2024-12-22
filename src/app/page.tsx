@@ -51,8 +51,8 @@ const Page = () => {
 
   if (!user) {
     return (
-      <div className="flex flex-col items-center min-h-screen bg-gray-50 p-4">
-        <p>Please login to continue</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 space-y-4">
+        <p className="font-bold">Please login to continue</p>
         <div className="flex flex-col items-center gap-4">
           <button
             onClick={handleLogin}
