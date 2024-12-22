@@ -11,7 +11,6 @@ import TranscriptionInput from "./x-components/general.transcription";
 
 const Page = () => {
   const { currentImageIndex, setCurrentImageIndex, currentImage } = useImages();
-  const [parentSelection, setParentSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [confidence, setConfidence] = useState(2);
   const { chunks, setChunks } = useChunks();
   const [transcriptionValue, setTranscriptionValue] = useState({
@@ -21,8 +20,6 @@ const Page = () => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [currentSelection, setCurrentSelection] = useState<SelectionArea | null>(null);
 
-  console.log(parentSelection);
-
   const confidenceMapping = {
     1: "Low",
     2: "Medium",
@@ -30,19 +27,18 @@ const Page = () => {
   };
 
   const handleSubmitChunk = () => {
-    if (currentImage) {
+    if (currentImage && currentSelection) {
       const newChunk: Chunk = {
         id: uuidv4(),
-        x: parentSelection.x,
-        y: parentSelection.y,
-        width: parentSelection.width,
-        height: parentSelection.height,
+        x: currentSelection.x,
+        y: currentSelection.y,
+        width: currentSelection.width,
+        height: currentSelection.height,
         transcription: transcriptionValue.latex,
         confidence: confidence,
         parentImageId: currentImage?.id,
       };
       setChunks([...chunks, newChunk]);
-      setParentSelection({ x: 0, y: 0, width: 0, height: 0 });
       setTranscriptionValue({ userInput: "", latex: "" });
       setConfidence(2);
       setCurrentSelection(null);
@@ -51,10 +47,10 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center min-h-screen bg-gray-50 p-4">
       {/* Header section */}
       <header className="w-full bg-white shadow-sm py-4 mb-6">
-        <h1>Goblins Whiteboard Labeling System</h1>
+        <h1 className="text-2xl font-bold text-center">Goblins Whiteboard Labeling System</h1>
       </header>
 
       <main className="container mx-auto px-4 flex flex-col gap-6 max-w-6xl">
@@ -89,7 +85,7 @@ const Page = () => {
         </div>
 
         {/* Chunk selection */}
-        <div className="grid grid-cols-[2fr,1fr] gap-6">
+        <div className="grid grid-cols-2 gap-6">
           <div className="bg-white rounded-lg shadow-md p-4">
             {currentImage && (
               <ChunkSelector
@@ -139,18 +135,48 @@ const Page = () => {
             {/* Current image chunks */}
             <div className="bg-white rounded-lg shadow-md p-4">
               <h2 className="text-lg font-semibold mb-4">Current Image Chunks</h2>
-              <div className="space-y-2">
-                {currentImage &&
-                  chunks.map((chunk) => {
-                    if (chunk.parentImageId === currentImage.id) {
-                      return (
-                        <div key={chunk.id} className="p-3 bg-gray-50 rounded-md">
-                          <p className="text-sm text-gray-600">ID: {chunk.id}</p>
-                          <p className="text-sm text-gray-600">Text: {chunk.transcription}</p>
-                        </div>
-                      );
-                    }
-                  })}
+              <div className="max-h-[400px] overflow-y-auto">
+                <table className="min-w-full overflow-y-auto">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        ID
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Position
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Transcription
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        Confidence
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {currentImage &&
+                      chunks.map((chunk) => {
+                        if (chunk.parentImageId === currentImage.id) {
+                          return (
+                            <tr key={chunk.id}>
+                              <td className="px-4 py-2 text-sm text-gray-600">
+                                {chunk.id.slice(0, 20)}
+                              </td>
+                              <td className="px-4 py-2 text-sm text-gray-600">
+                                x: {chunk.x}, y: {chunk.y}
+                              </td>
+                              <td className="px-4 py-2 text-sm text-gray-600">
+                                {chunk.transcription.slice(0, 20)}
+                              </td>
+                              <td className="px-4 py-2 text-sm text-gray-600">
+                                {chunk.confidence}
+                              </td>
+                            </tr>
+                          );
+                        }
+                      })}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
