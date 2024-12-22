@@ -7,12 +7,17 @@ import { useChunks } from "@/hooks/hooks.chunks";
 import { Chunk } from "@/types/types.chunks";
 import { v4 as uuidv4 } from "uuid";
 import { exportToCsv } from "@/utils/utils.export-csv";
+import TranscriptionInput from "./x-components/general.transcription";
 
 const Page = () => {
   const { currentImageIndex, setCurrentImageIndex, currentImage } = useImages();
   const [parentSelection, setParentSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [confidence, setConfidence] = useState(2);
   const { chunks, setChunks } = useChunks();
+  const [transcriptionValue, setTranscriptionValue] = useState({
+    userInput: "",
+    latex: "",
+  });
 
   const confidenceMapping = {
     1: "Low",
@@ -28,11 +33,13 @@ const Page = () => {
         y: parentSelection.y,
         width: parentSelection.width,
         height: parentSelection.height,
+        transcription: transcriptionValue.latex,
         confidence: confidence,
         parentImageId: currentImage?.id,
       };
       setChunks([...chunks, newChunk]);
       setParentSelection({ x: 0, y: 0, width: 0, height: 0 });
+      setTranscriptionValue({ userInput: "", latex: "" });
       setConfidence(2);
     }
   };
@@ -64,6 +71,9 @@ const Page = () => {
           />
         )}
       </div>
+
+      {/* Transcription input */}
+      <TranscriptionInput value={transcriptionValue} onChange={setTranscriptionValue} />
 
       {/* Confidence interval */}
       <input
