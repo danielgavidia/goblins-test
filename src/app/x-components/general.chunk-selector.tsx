@@ -1,17 +1,23 @@
 import React, { useState, useRef } from "react";
 
-interface ChunkSelectorProps {
+interface SelectionArea {
   x: number;
   y: number;
   width: number;
   height: number;
 }
 
+interface ChunkSelectorProps {
+  imageSrc: string;
+  imageAlt?: string;
+  onSelectionChange: (selection: SelectionArea) => void;
+}
+
 const ChunkSelector = ({
+  imageSrc,
+  imageAlt = "Selectable image",
   onSelectionChange,
-}: {
-  onSelectionChange: (selection: ChunkSelectorProps) => void;
-}) => {
+}: ChunkSelectorProps) => {
   const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [isSelecting, setIsSelecting] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -61,7 +67,7 @@ const ChunkSelector = ({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        <img src="/api/placeholder/800/600" alt="Selectable image" className="w-full h-auto" />
+        <img src={imageSrc} alt={imageAlt} className="w-full h-auto" />
 
         {(isSelecting || selection.width > 0) && (
           <div
