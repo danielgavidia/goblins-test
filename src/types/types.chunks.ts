@@ -4,6 +4,7 @@ export interface Chunk {
   y: number;
   width: number;
   height: number;
+  transcription: string;
   confidence: number;
   parentImageId: string;
 }
