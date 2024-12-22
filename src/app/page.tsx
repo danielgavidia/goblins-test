@@ -8,8 +8,11 @@ import { Chunk } from "@/types/types.chunks";
 import { v4 as uuidv4 } from "uuid";
 import { exportToCsv } from "@/utils/utils.export-csv";
 import TranscriptionInput from "./x-components/general.transcription";
+import { useAuth } from "@/hooks/hooks.auth";
 
 const Page = () => {
+  const { user, handleLogin } = useAuth();
+
   const { currentImageIndex, setCurrentImageIndex, currentImage } = useImages();
   const [confidence, setConfidence] = useState(2);
   const { chunks, setChunks } = useChunks();
@@ -45,6 +48,22 @@ const Page = () => {
       setIsSelecting(false);
     }
   };
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 space-y-4">
+        <p className="font-bold">Please login to continue</p>
+        <div className="flex flex-col items-center gap-4">
+          <button
+            onClick={handleLogin}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-50 p-4">
