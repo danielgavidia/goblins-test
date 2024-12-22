@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const exportToCsv = (data: any[], filename: string = "export.csv"): void => {
   if (data.length === 0) return;
 
